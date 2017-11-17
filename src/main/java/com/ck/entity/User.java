@@ -6,6 +6,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 /**
+ * 用户
  * Created by dudycoco on 17-11-17.
  */
 @AllArgsConstructor
