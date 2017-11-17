@@ -1,0 +1,1 @@
+just a blog via springboot and spring jpa 
