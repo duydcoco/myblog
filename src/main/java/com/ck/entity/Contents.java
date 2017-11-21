@@ -37,17 +37,17 @@ public class Contents implements Serializable{
     private String  slug;
 
     @Column(name = "created"
-            ,columnDefinition = "BingInt(25) comment '内容生成时的GMT unix时间戳'")
+            ,columnDefinition = "BigInt(20) comment '内容生成时的GMT unix时间戳'")
     private Long created;
 
     @Column(name = "modified"
-            ,columnDefinition = "BingInt(25) comment '内容更改时的GMT unix时间戳'")
+            ,columnDefinition = "BigInt(20) comment '内容更改时的GMT unix时间戳'")
     private Long modified;
 
     @NotEmpty(message = "内容不能为空")
     @Length(max = 10000, message = "文章内容最多可以输入%d个字符")
     @Column(name = "content"
-            ,columnDefinition = "longtext(10000) comment '内容文字'")
+            ,columnDefinition = "VARCHAR(10000) comment '内容文字'")
     private String  content;
 
     @ManyToOne
@@ -56,7 +56,7 @@ public class Contents implements Serializable{
     private User user;
 
     @Column(name = "hits"
-            ,columnDefinition = "Int(20) comment '点击次数'")
+            ,columnDefinition = "Int(10) comment '点击次数'")
     private Integer hits;
 
     @Column(name = "type"

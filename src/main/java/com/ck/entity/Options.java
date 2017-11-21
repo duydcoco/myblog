@@ -21,10 +21,12 @@ import java.io.Serializable;
 public class Options implements Serializable{
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "name"
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "option_name"
             ,columnDefinition = "varchar(25) comment '配置名称'")
-    private String name;
+    private String optionName;
 
     @Column(name = "value"
             ,columnDefinition = "varchar(25) comment '配置值'")

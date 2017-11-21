@@ -42,6 +42,6 @@ public class Logs implements Serializable{
     private String ip;
 
     @Column(name = "created"
-            ,columnDefinition = "BigInte(20) comment '日志创建时间'")
+            ,columnDefinition = "BigInt(20) comment '日志创建时间'")
     private Long created;
 }

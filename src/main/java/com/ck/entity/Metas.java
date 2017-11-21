@@ -22,7 +22,7 @@ public class Metas implements Serializable{
     @Id
     @Column(name = "mid",columnDefinition = "BigInt(20)")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer mid;
+    private Long mid;
 
     @Column(name = "name"
             ,columnDefinition = "varchar(25) comment '名称'")
@@ -46,7 +46,7 @@ public class Metas implements Serializable{
 
     @ManyToOne
     @JoinColumn(name = "parent"
-            ,columnDefinition = "BigInt(25) comment '父级'")
+            ,columnDefinition = "BigInt(20) comment '父级'")
     private Metas parent;
 
     @Column(name = "count"
