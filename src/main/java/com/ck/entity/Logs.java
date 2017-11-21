@@ -21,7 +21,7 @@ public class Logs implements Serializable{
 
     @Id
     @Column(name = "id",columnDefinition = "BigInt(20)")
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Column(name = "action"
@@ -41,7 +41,7 @@ public class Logs implements Serializable{
             ,columnDefinition = "varchar(25) comment '日志产生的ip'")
     private String ip;
 
-    @Column(name = "action"
+    @Column(name = "created"
             ,columnDefinition = "BigInte(20) comment '日志创建时间'")
     private Long created;
 }

@@ -23,7 +23,7 @@ public class Contents implements Serializable{
 
     @Id
     @Column(columnDefinition = "BigInt(20)")
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer cid;
 
     @NotEmpty(message = "标题不能为空")
@@ -36,11 +36,11 @@ public class Contents implements Serializable{
             ,columnDefinition = "varchar(25) comment '内容缩略名'")
     private String  slug;
 
-    @Column(name = "title"
+    @Column(name = "created"
             ,columnDefinition = "BingInt(25) comment '内容生成时的GMT unix时间戳'")
     private Long created;
 
-    @Column(name = "title"
+    @Column(name = "modified"
             ,columnDefinition = "BingInt(25) comment '内容更改时的GMT unix时间戳'")
     private Long modified;
 

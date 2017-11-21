@@ -1,10 +1,9 @@
 package com.ck.entity;
 
 import lombok.*;
+import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.io.Serializable;
 
 /**
@@ -21,6 +20,8 @@ import java.io.Serializable;
 @Table(name = "t_options")
 public class Options implements Serializable{
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "name"
             ,columnDefinition = "varchar(25) comment '配置名称'")
     private String name;

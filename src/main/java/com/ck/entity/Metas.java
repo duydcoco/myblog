@@ -21,7 +21,7 @@ public class Metas implements Serializable{
 
     @Id
     @Column(name = "mid",columnDefinition = "BigInt(20)")
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer mid;
 
     @Column(name = "name"
@@ -47,7 +47,7 @@ public class Metas implements Serializable{
     @ManyToOne
     @JoinColumn(name = "parent"
             ,columnDefinition = "BigInt(25) comment '父级'")
-    private Integer parent;
+    private Metas parent;
 
     @Column(name = "count"
             ,columnDefinition = "Int(20) comment '文章数'")
