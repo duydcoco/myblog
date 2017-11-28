@@ -4,9 +4,11 @@ import com.ck.entity.Contents;
 import com.ck.utils.PageEntity;
 import org.springframework.data.domain.Pageable;
 
-import javax.swing.text.html.parser.Entity;
+import java.util.Optional;
 
 public interface ArticleService {
 
    PageEntity<Contents> findPage(Pageable pageable);
+
+   Optional<Contents> getContents(String cid);
 }
