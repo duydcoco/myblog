@@ -1,5 +1,6 @@
 package com.ck.service.impl;
 
+import com.ck.constant.Types;
 import com.ck.entity.Contents;
 import com.ck.entity.Metas;
 import com.ck.entity.RelationShips;
@@ -63,40 +64,57 @@ public class MetaServiceImpl implements MetaService{
     }
 
     @Override
-    public void saveMetas(Long cid, String names, String type) {
-        validate(cid,NOT_NULL,"内容不能为空");
-        if(!Strings.isNullOrEmpty(names)&&Strings.isNullOrEmpty(type)){
-            String[] nameArray = names.split(",");
-            for(String name:nameArray){
-                saveOrUpdate(cid,name,type);
-            }
+    public void deleteByMid(Long mid) {
+        validate(mid,NOT_NULL,"id不能为空");
+        Metas metas = metaRepository.findOne(mid);
+        validate(metas,NOT_NULL,"找不到id为:"+mid+"的项");
+        String name = metas.getName();
+        String type = metas.getType();
+        metaRepository.delete(mid);
+        List<RelationShips> relationShipsList = relationShipRespository.findAllByMid(mid);
+        if(!CollectionUtils.isEmpty(relationShipsList)){
+            relationShipsList.stream()
+                    .map(relationShips -> contentsRepository.findOne(relationShips.getCid()))
+                    .filter(Objects::nonNull)
+                    .forEach(contents -> {
+                        boolean isUpdate = false;
+                        if (Types.TAG.equals(type)){
+                            isUpdate = true;
+                            contents.setTags(resetMetas(name,contents.getTags()));
+                        }
+                        if(Types.CATEGORY.equals(type)){
+                            contents.setCategories(resetMetas(name,contents.getTags()));
+                        }
+                        if(isUpdate){
+                            contentsRepository.saveAndFlush(contents);
+                        }
+                    });
         }
     }
 
-    private void saveOrUpdate(Long cid, String name, String type) {
-        Metas metas = metaRepository.findByTypeAndName(type,name);
-        Long mid = null;
-        if(!Objects.isNull(metas)){
-            mid = metas.getMid();
-        }else{
-            Metas newMetas = Metas.builder()
-                    .name(name)
-                    .type(type)
-                    .description(name)
-                    .slug(name)
-                    .build();
-            mid =metaRepository.save(newMetas).getMid();
+    @Override
+    public void saveMeta(String name, String type) {
+        if(!Strings.isNullOrEmpty(name)&&!Strings.isNullOrEmpty(type)){
+            Metas metas = metaRepository.findByTypeAndName(type,name);
+            validate(!Objects.isNull(metas),"该项已经存在");
+            metas.setName(name);
+            metas.setType(type);
+            metaRepository.save(metas);
         }
-        if(!Objects.isNull(mid)){
-           int count = relationShipRespository.countByMidAndCid(mid,cid);
-           if(count==0){
-               RelationShips relationShips = RelationShips.builder()
-                       .cid(cid)
-                       .mid(mid)
-                       .build();
-               relationShipRespository.save(relationShips);
-           }
+    }
+
+    private String resetMetas(String name, String metas) {
+        String[] strArray = metas.split(",");
+        for(String meta : strArray){
+            StringBuilder stringBuilder = new StringBuilder();
+            if(!name.equals(meta)){
+                stringBuilder.append(",").append(meta);
+            }
+            if(stringBuilder.length()>0){
+                return stringBuilder.substring(1);
+            }
         }
+        return "";
     }
 
     private List<Contents>  getMetaContents(Metas metas) {

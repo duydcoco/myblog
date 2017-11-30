@@ -24,7 +24,7 @@ public class Contents implements Serializable{
     @Id
     @Column(columnDefinition = "BigInt(20)")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer cid;
+    private Long cid;
 
     @NotEmpty(message = "标题不能为空")
     @Length(max = 200, message = "文章标题最多可以输入%d个字符")

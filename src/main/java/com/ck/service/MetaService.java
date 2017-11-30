@@ -24,6 +24,7 @@ public interface MetaService {
 
     Optional<Metas> getMetasByTypeAndName(String type, String name);
 
-    void saveMetas(Long cid,String names,String type);
+    void deleteByMid(Long mid);
 
+    void saveMeta(String name,String type);
 }

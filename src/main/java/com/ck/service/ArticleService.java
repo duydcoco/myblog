@@ -11,4 +11,6 @@ public interface ArticleService {
    PageEntity<Contents> findPage(Pageable pageable);
 
    Optional<Contents> getContents(String cid);
+
+   Contents publish(Contents contents);
 }

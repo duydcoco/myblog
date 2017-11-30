@@ -13,4 +13,5 @@ public interface ContentsRepository extends JpaRepository<Contents,Long> {
 
     Contents findBySlug(String slug);
 
+    int countByTypeAndSlug(String type,String slug);
 }
