@@ -9,6 +9,7 @@ import com.ck.repository.ContentsRepository;
 import com.ck.repository.MetaRepository;
 import com.ck.repository.RelationShipRespository;
 import com.ck.service.ArticleService;
+import com.ck.utils.BlogUtils;
 import com.ck.utils.PageEntity;
 import com.vdurmont.emoji.EmojiParser;
 import org.apache.commons.lang3.StringUtils;
@@ -68,7 +69,7 @@ public class ArticleServiceImpl implements ArticleService{
         validate(Objects.isNull(contents.getUser()),"请登录后发布文章");
         if(StringUtils.isNotBlank(contents.getSlug())){
             validate(contents.getSlug().length()<5,"路径太短了");
-            validate("");//校验路径暂留
+            validate(!BlogUtils.isPath(contents.getSlug()),"您输入的路径不合法");//校验路径暂留
             validate(contentsRepository.countByTypeAndSlug(contents.getType(),contents.getSlug())>0,"该路径已经存在，请重新输入");
         }
         contents.setContent(EmojiParser.parseToAliases(contents.getContent()));
@@ -78,6 +79,43 @@ public class ArticleServiceImpl implements ArticleService{
         saveMetas(contents.getCid(),contents.getTags(),Types.TAG);
         saveMetas(contents.getCid(),contents.getCategories(),Types.CATEGORY);
         return contents;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void updateArticle(Contents contents) {
+        validate(contents,NOT_NULL,"更新内容不能为null");
+        contents.setModified(DateTime.now().getMillis());
+        contents.setContent(EmojiParser.parseToAliases(contents.getContent()));
+        contents.setTags(contents.getTags()!=null?contents.getTags():"");
+        contents.setCategories(contents.getCategories()!=null?contents.getCategories():"");
+        contentsRepository.save(contents);
+        if(StringUtils.isNotBlank(contents.getType())&&Types.PAGE.equals(contents.getType())){
+            relationShipRespository.deleteByCid(contents.getCid());
+        }
+        saveMetas(contents.getCid(),contents.getTags(),Types.TAG);
+        saveMetas(contents.getCid(),contents.getCategories(),Types.CATEGORY);
+    }
+
+    @Override
+    public void delete(Long cid) {
+        Optional<Contents> contents = getContents(String.valueOf(cid));
+        contents.ifPresent(item->{
+            contentsRepository.delete(item.getCid());
+            relationShipRespository.deleteByCid(item.getCid());
+        });
+    }
+
+    @Override
+    public PageEntity<Contents> findPageByMid(Long mid, Pageable pageable) {
+        validate(mid,NOT_NULL,"请选择一个归类项");
+        Page<Contents> page = contentsRepository.findByMid(mid,pageable);
+        PageEntity<Contents> pageEntity = new PageEntity<Contents>();
+        pageEntity.setList(page.getContent());
+        pageEntity.setPageNumber(page.getNumber());
+        pageEntity.setPageSize(page.getSize());
+        pageEntity.setTotal(page.getTotalElements());
+        return pageEntity;
     }
 
     private void saveMetas(Long cid, String names, String type) {

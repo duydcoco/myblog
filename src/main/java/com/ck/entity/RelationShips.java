@@ -3,6 +3,7 @@ package com.ck.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 /**
  * 内容表与项目表的关联
@@ -15,7 +16,7 @@ import javax.persistence.*;
 @ToString
 @Entity
 @Table(name = "t_relationships")
-public class RelationShips {
+public class RelationShips implements Serializable{
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

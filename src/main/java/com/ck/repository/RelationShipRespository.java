@@ -10,4 +10,6 @@ public interface RelationShipRespository extends JpaRepository<RelationShips,Lon
     List<RelationShips> findAllByMid(Long mid);
 
     int countByMidAndCid(Long mid,Long cid);
+
+    void deleteByCid(Long cid);
 }
