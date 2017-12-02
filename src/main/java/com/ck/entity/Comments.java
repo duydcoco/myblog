@@ -6,6 +6,7 @@ import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 /**
@@ -27,9 +28,9 @@ public class Comments implements Serializable{
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long coid;
 
-    @ManyToOne
-    @JoinColumn(name = "cid",columnDefinition = "BigInt(20) comment '评论所属文章'")
-    private Contents contents;
+    @Column(name = "cid",columnDefinition = "BigInt(20) comment '评论所属文章'")
+    @NotNull
+    private Long contentsId;
 
     @Column(name = "created"
             ,columnDefinition = "BigInt(25) comment '评论生成时的GMT unix时间戳'")
@@ -83,5 +84,5 @@ public class Comments implements Serializable{
 
     @Column(name = "parent"
             ,columnDefinition = "BigInt(25) comment '父级评论'")
-    private Comments parentComments;
+    private Long parentId;
 }
