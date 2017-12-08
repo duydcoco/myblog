@@ -1,14 +1,12 @@
 package com.ck.repository;
 
-import com.ck.entity.Attach;
+import com.ck.entity.Logs;
 import com.ck.entity.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface AttachRepository extends JpaRepository<Attach,Long>{
+public interface LogRepository extends JpaRepository<Logs,Long>{
 
-    Page<Attach> findAllByAuthorOrderByCreated(User user ,Pageable pageable);
-
-    int countByAuthor(User user);
+    Page<Logs> findAllByAuthorOrderByCreated(User user, Pageable pageable);
 }

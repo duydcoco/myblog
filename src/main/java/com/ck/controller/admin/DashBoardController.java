@@ -1,4 +1,4 @@
-package com.ck.controller;
+package com.ck.controller.admin;
 
 import com.ck.utils.Result;
 import com.ck.vo.StatisticsAnalysisVo;
@@ -10,6 +10,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class DashBoardController {
 
     public Result<StatisticsAnalysisVo> getCount(){
-
+        return null;
     }
 }

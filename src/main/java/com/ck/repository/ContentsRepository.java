@@ -1,6 +1,7 @@
 package com.ck.repository;
 
 import com.ck.entity.Contents;
+import com.ck.entity.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -41,5 +42,9 @@ public interface ContentsRepository extends JpaRepository<Contents,Long> {
 
     @Query(findSql)
     Page<Contents> findByMid(Long mid,Pageable pageable);
+
+    int countByUserAndTypeAndStatus(User user, String type,String status);
+
+    Page<Contents> findAllByUserAndTypeAndStatusOrderByCreated(User user, String type,String status,Pageable pageable);
 
 }
