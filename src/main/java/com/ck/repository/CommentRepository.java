@@ -14,4 +14,6 @@ public interface CommentRepository extends JpaRepository<Comments,Long>{
     int countByAuthor_id(Long authorId);
 
     Page<Comments> findAllByAuthor_idOrderByCreated(Long authorId,Pageable pageable);
+
+    Page<Comments> findByAuthor_idNotOrderByCreatedAsc(Long authorId,Pageable pageable);
 }

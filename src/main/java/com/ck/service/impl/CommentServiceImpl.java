@@ -77,6 +77,17 @@ public class CommentServiceImpl implements CommentService{
     }
 
     @Override
+    public PageEntity<Comments> listPage(Long userId, Pageable pageable) {
+        Page<Comments> page = commentRepository.findByAuthor_idNotOrderByCreatedAsc(userId,pageable);
+        PageEntity<Comments> pageEntity = new PageEntity<Comments>();
+        pageEntity.setList(page.getContent());
+        pageEntity.setPageSize(page.getSize());
+        pageEntity.setPageNumber(page.getNumber());
+        pageEntity.setTotal(page.getTotalElements());
+        return pageEntity;
+    }
+
+    @Override
     public PageEntity<Comments> getDetail(Long parentId,Long contentsId,Pageable pageable) {
        validate(parentId,NOT_NULL,"上级评论不能为空");
        Page<Comments> page = commentRepository.findAllByParentIdAndContentsId(parentId,contentsId,pageable);

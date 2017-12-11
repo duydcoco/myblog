@@ -1,25 +1,24 @@
 package com.ck.controller.admin;
 
-import com.ck.service.StatisticService;
+import com.ck.entity.Comments;
+import com.ck.service.CommentService;
+import com.ck.utils.PageEntity;
 import com.ck.utils.Result;
-import com.ck.vo.DashBoardVo;
-import com.ck.vo.StatisticsAnalysisVo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-@RequestMapping("/dashboard")
+@RequestMapping("/comment")
 @RestController
-public class DashBoardController {
+public class CommentController {
 
     @Autowired
-    private StatisticService statisticService;
+    private CommentService commentService;
 
     @RequestMapping(value = "",method = RequestMethod.GET)
-    public Result<DashBoardVo> getDashBoard(Long userId){
-        DashBoardVo dashBoardVo =  statisticService.getDashBoard(userId);
-        return Result.ok(dashBoardVo);
-    }
+    public Result<PageEntity<Comments>> list(Pageable pageable){
 
+    }
 }

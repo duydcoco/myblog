@@ -15,6 +15,7 @@ public interface CommentService {
     void saveComment(CommentParam commentParam);
 
     PageEntity<CommentVo> findPage(Long contentId, Pageable pageable);
+    PageEntity<Comments> listPage(Long userId,Pageable pageable);
 
     /**
      * 获取某一评论的回复信息
