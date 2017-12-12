@@ -1,16 +1,18 @@
 package com.ck.vo;
 
 import com.ck.entity.Comments;
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 
 import java.io.Serializable;
 import java.util.List;
 
-@Data
 @Builder
+@NoArgsConstructor
+@Getter
+@Setter
+@ToString
 public class CommentVo implements Serializable{
 
     private Comments parent;
-    private Boolean isHasChidren;
+    private List<Comments> children;
 }

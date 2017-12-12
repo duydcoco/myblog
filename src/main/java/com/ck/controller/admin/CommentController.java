@@ -18,7 +18,14 @@ public class CommentController {
     private CommentService commentService;
 
     @RequestMapping(value = "",method = RequestMethod.GET)
-    public Result<PageEntity<Comments>> list(Pageable pageable){
+    public Result<PageEntity<Comments>> list(Long userId,Pageable pageable){
+        PageEntity<Comments> pageEntity = commentService.listPage(userId,pageable);
+        return Result.ok(pageEntity);
+    }
 
+    @RequestMapping(value = "/delete",method = RequestMethod.DELETE)
+    public Result<String> delete(Long commentId){
+        commentService.delete(commentId);
+        return Result.ok("删除评论成功");
     }
 }

@@ -14,15 +14,21 @@ public interface CommentService {
 
     void saveComment(CommentParam commentParam);
 
-    PageEntity<CommentVo> findPage(Long contentId, Pageable pageable);
-    PageEntity<Comments> listPage(Long userId,Pageable pageable);
-
     /**
-     * 获取某一评论的回复信息
-     * @param parentId
+     * 前端获取某篇文章的所有评论及回复
+     * @param contentId
+     * @param pageable
      * @return
      */
-    PageEntity<Comments> getDetail(Long parentId, Long conentsId, Pageable pageable);
+    PageEntity<CommentVo> findPage(Long contentId, Pageable pageable);
 
-    void delete(Long comentsId,Long contentsId);
+    /**
+     * 后端的评论管理获取所有非当前作者的评论
+     * @param userId
+     * @param pageable
+     * @return
+     */
+    PageEntity<Comments> listPage(Long userId,Pageable pageable);
+
+    void delete(Long comentsId);
 }

@@ -5,6 +5,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
+
 public interface CommentRepository extends JpaRepository<Comments,Long>{
 
     Page<Comments> findAllByParentIdAndContentsId(Long parentId,Long contentsId,Pageable pageable);
@@ -16,4 +18,6 @@ public interface CommentRepository extends JpaRepository<Comments,Long>{
     Page<Comments> findAllByAuthor_idOrderByCreated(Long authorId,Pageable pageable);
 
     Page<Comments> findByAuthor_idNotOrderByCreatedAsc(Long authorId,Pageable pageable);
+
+    List<Comments> findAllByParentIdOrderByCoidAsc(Long parentId);
 }

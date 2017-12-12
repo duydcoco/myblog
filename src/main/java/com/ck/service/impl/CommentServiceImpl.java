@@ -8,6 +8,8 @@ import com.ck.repository.CommentRepository;
 import com.ck.repository.ContentsRepository;
 import com.ck.service.CommentService;
 import com.ck.utils.PageEntity;
+import org.apache.commons.collections4.CollectionUtils;
+import org.assertj.core.util.Lists;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -53,27 +55,33 @@ public class CommentServiceImpl implements CommentService{
         validate(contentId,NOT_NULL,"文章不能为空");
         //获取一级评论
         Page<Comments> page = commentRepository.findAllByParentIdAndContentsId(0L,contentId,pageable);
-        //重新构造vo看有无回复
+        PageEntity<CommentVo> pageEntity = new PageEntity<CommentVo>();
         List<CommentVo> commentVoList = page
                 .getContent()
                 .stream()
-                .map(comments -> {
-                    int count = commentRepository.countByParentId(comments.getCoid());
-                    Boolean isHasChrildren = count>0?Boolean.TRUE:Boolean.FALSE;
-                    CommentVo commentVo = CommentVo
-                            .builder()
-                            .parent(comments)
-                            .isHasChidren(isHasChrildren)
-                            .build();
+                .map(item->{
+                    CommentVo commentVo = new CommentVo();
+                    commentVo.setParent(item);
+                    List<Comments> children = Lists.newArrayList();
+                    getChildren(children,item.getCoid());
+                    commentVo.setChildren(children);
                     return commentVo;
-                }).collect(Collectors.toList());
-        PageEntity<CommentVo> pageEntity = new PageEntity<CommentVo>();
+                })
+                .collect(Collectors.toList());
         pageEntity.setPageNumber(page.getNumber());
         pageEntity.setPageSize(page.getSize());
-        pageEntity.setTotal(page.getTotalElements());
         pageEntity.setList(commentVoList);
-        pageEntity.setTotal(page.getTotalElements());
         return pageEntity;
+    }
+
+    private void getChildren(List<Comments> children, Long coid) {
+        List<Comments> commentsList = commentRepository.findAllByParentIdOrderByCoidAsc(coid);
+        if(CollectionUtils.isNotEmpty(commentsList)){
+            children.addAll(commentsList);
+            commentsList.forEach(item->{
+                getChildren(children,item.getCoid());
+            });
+        }
     }
 
     @Override
@@ -88,25 +96,13 @@ public class CommentServiceImpl implements CommentService{
     }
 
     @Override
-    public PageEntity<Comments> getDetail(Long parentId,Long contentsId,Pageable pageable) {
-       validate(parentId,NOT_NULL,"上级评论不能为空");
-       Page<Comments> page = commentRepository.findAllByParentIdAndContentsId(parentId,contentsId,pageable);
-       PageEntity<Comments> pageEntity = new PageEntity<Comments>();
-       pageEntity.setTotal(page.getTotalElements());
-       pageEntity.setList(page.getContent());
-       pageEntity.setPageSize(page.getSize());
-       pageEntity.setPageNumber(page.getNumber());
-       return pageEntity;
-    }
-
-    @Override
     @Transactional(rollbackFor = Exception.class)
-    public void delete(Long comentsId,Long contentsId) {
+    public void delete(Long comentsId) {
         validate(comentsId,NOT_NULL,"评论id不能为空");
-        validate(contentsId,NOT_NULL,"文章id不能为空");
+        Comments comments= commentRepository.findOne(comentsId);
         commentRepository.delete(comentsId);
-        Contents contents = contentsRepository.findOne(contentsId);
-        validate(contents,NOT_NULL,"此文章不存在");
+        Contents contents = contentsRepository.findOne(comments.getContentsId());
+        validate(contents,NOT_NULL,"评论所对应文章不存在");
         if(Objects.nonNull(contents.getCommentsNum())&&contents.getCommentsNum()>0){
             contents.setCommentsNum(contents.getCommentsNum()-1);
             contentsRepository.save(contents);
